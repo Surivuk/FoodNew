@@ -3,11 +3,9 @@ package com.example.aleksandarx.foodfinder.view;
 import android.os.Handler;
 import android.widget.Toast;
 
-import com.example.aleksandarx.foodfinder.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -30,13 +28,14 @@ public class MapClass implements OnMapReadyCallback {
     private MarkerOptions personsMarker = null;
     private Marker myPosition;
 
-
+    private HashMap<Integer,Marker> restaurants = null;
     private HashMap<Integer,Marker> friendsMarkers = null;
 
     public MapClass(int mapId, MainActivity act){
         mapReady = false;
         activity = act;
         friendsMarkers = new HashMap<>();
+        restaurants = new HashMap<>();
         SupportMapFragment mapFragment = (SupportMapFragment) act.getSupportFragmentManager()
                 .findFragmentById(mapId);
         mapFragment.getMapAsync(this);
@@ -117,12 +116,29 @@ public class MapClass implements OnMapReadyCallback {
             }
         });
     }
+    public void tryAddplace(Integer id,String name,double lat,double lng)
+    {
+        if(map!= null)
+        {
+            Marker place = restaurants.get(id);
+            if(place != null) restaurants.remove(id);
+
+            place = map.addMarker(new MarkerOptions()
+                            .position(new LatLng(lat,lng))
+                            .title(name)
+                    //.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_custom_pin))
+            );
+            restaurants.put(id,place);
+        }
+
+
+    }
     public boolean addPersonMarker(String title,double lat,double lng)
     {
             personsMarker = new MarkerOptions();
             personsMarker.title(title);
             personsMarker.position(new LatLng(lat,lng));
-            personsMarker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_custom_pin));
+            //personsMarker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_custom_pin));
             return mapReady;
     }
     public void tryAddFriend(Integer id,String name,double lat,double lng)

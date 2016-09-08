@@ -11,6 +11,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,15 +22,14 @@ import android.widget.Toast;
 import com.example.aleksandarx.foodfinder.R;
 import com.example.aleksandarx.foodfinder.bluetooth.BluetoothMainActivity;
 import com.example.aleksandarx.foodfinder.bluetooth.BluetoothModel;
+import com.example.aleksandarx.foodfinder.data.model.PlaceModel;
 import com.example.aleksandarx.foodfinder.network.FriendModel;
 import com.example.aleksandarx.foodfinder.network.PersonModel;
 import com.example.aleksandarx.foodfinder.share.UserPreferences;
 import com.example.aleksandarx.foodfinder.socket.SocketReceiver;
 import com.example.aleksandarx.foodfinder.socket.SocketService;
-import com.example.aleksandarx.foodfinder.sync.BackgroundService;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
             // Get extra data included in the Intent
             double lat = intent.getExtras().getDouble("lat");
             double lng = intent.getExtras().getDouble("lng");
+
             System.out.println("Got message: " + lat + ", " + lng);
             if(myMap != null)
                 myMap.changeMyPin(new LatLng(lat, lng));
@@ -123,17 +124,35 @@ public class MainActivity extends AppCompatActivity {
                 ArrayList<FriendModel> friends = bundle.getParcelableArrayList("friends");
                 for(int i = 0; i < friends.size(); i++)
                 {
-                    //TODO: Change this and server to send lat and long with the ID;
-                    //myMap.tryAddFriend(friendIDs);
                     FriendModel currentModel = friends.get(i);
                     myMap.tryAddFriend(currentModel.ID, currentModel.username, currentModel.lat, currentModel.lng);
                 }
+            }
+            //restaurant update
+            else if(type == 5)
+            {
+                ArrayList<PlaceModel> places = bundle.getParcelableArrayList("restaurants");
+                if(places == null)
+                {
+                    Log.i("MainActivity","BCAST type 5! Received restaurants update but its empty!");
+                    return;
+                }
+
+                for(int i = 0; i < places.size(); i++)
+                {
+                        PlaceModel place = places.get(i);
+                        myMap.tryAddplace(place.id,place.name+"\n"+place.address,place.latitude,place.longitude);
+                }
+
+
+
             }
         }
     };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -156,13 +175,32 @@ public class MainActivity extends AppCompatActivity {
         Bundle personBundle = invokingIntent.getExtras();
         if(personBundle != null)
         {
-            String personID = personBundle.getString("personsID");
-            double personLat = personBundle.getDouble("personsLat");
-            double personLng = personBundle.getDouble("personsLng");
 
-            myMap.addPersonMarker(personID,personLat,personLng);
+            String personID = personBundle.getString("personsID");
+            if(personID == null)
+            {
+                int type = personBundle.getInt("type");
+                if(type == -1)
+                {
+                    //restaurants
+                    /*ArrayList<PlaceModel> places = personBundle.getParcelableArrayList("restaurants");
+                    for(int i = 0; i < places.size(); i++)
+                    {
+                        PlaceModel place = places.get(i);
+                        myMap.tryAddplace(place.id,place.name+"\n"+place.address,place.latitude,place.longitude);
+                    }*/
+
+                }
+            }
+            else{
+                double personLat = personBundle.getDouble("personsLat");
+                double personLng = personBundle.getDouble("personsLng");
+
+                myMap.addPersonMarker(personID,personLat,personLng);
+            }
+
         }
-        btServicel = new Intent(MainActivity.this, BackgroundService.class);
+        //btServicel = new Intent(MainActivity.this, BackgroundService.class);
     }
 
     @Override
