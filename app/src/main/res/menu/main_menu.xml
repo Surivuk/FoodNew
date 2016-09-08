@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_places"
+        android:title="@string/menu_my_places" />
+
+    <item
+        android:id="@+id/menu_about"
+        android:title="@string/menu_about" />
+
+    <item
+        android:id="@+id/menu_bluetooth"
+        android:title="@string/bluetooth" />
+
+    <item
+        android:id="@+id/menu_settings"
+        android:title="@string/settings" />
+
+    <item
+        android:id="@+id/menu_find_people"
+        android:title="@string/find_more_people" />
+
+    <item
+        android:id="@+id/menu_sign_out"
+        android:title="@string/menu_sign_out" />
+
+    <item
+        android:id="@+id/menu_view_profile"
+        android:title="@string/menu_view_profile" />
+
+    <item
+        android:id="@+id/menu_friend_list"
+        android:title="Friend list" />
+
+    <item
+        android:id="@+id/menu_top_restaurant"
+        android:title="Top Restaurants" />
+</menu>

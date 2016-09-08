@@ -1,0 +1,139 @@
+<resources xmlns:xliff="http://schemas.android.com/tools">
+    <string name="app_name">FoodFinder</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">E-mail</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="sign_up">Sign up</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">Contacts permissions are needed for providing email</string>
+    <string name="avatar_button">Choose your avatar image</string>
+
+    <string name="menu_about">About</string>
+    <string name="menu_my_places">My Food</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_sign_out">Sign out</string>
+
+    <string name="about_text">FoodFinder is fast way to share your feeling about food with other people. Also provides plenty of opportunities to find your favorite foods that surrounds you.</string>
+    <string name="bluetooth_button_test">Test</string>
+    <string name="bluetooth">Bluetooth</string>
+
+
+    <string name="empty_list">There is no food!</string>
+
+    <string-array name="food_type_array">
+        <item>Pasta</item>
+        <item>Meat</item>
+        <item>Fish</item>
+        <item>Egs</item>
+        <item>Salad</item>
+        <item>Dessert</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="food_types">
+        <item>Italian</item>
+        <item>France</item>
+        <item>English</item>
+        <item>Indian</item>
+        <item>Chinese</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="origin_array">
+        <item>Italian</item>
+        <item>France</item>
+        <item>English</item>
+        <item>Indian</item>
+        <item>Chinese</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="meal_type_array">
+        <item>Breakfast</item>
+        <item>Lunch</item>
+        <item>Dinner</item>
+    </string-array>
+
+    <!--  BluetoothChat -->
+    <string name="send">Send</string>
+    <string name="not_connected">You are not connected to a device</string>
+    <string name="bt_not_enabled_leaving">Bluetooth was not enabled. Leaving Bluetooth Chat.</string>
+    <string name="title_connecting">connecting...</string>
+    <string name="title_connected_to">connected to <xliff:g id="device_name">%1$s</xliff:g></string>
+    <string name="title_not_connected">not connected</string>
+
+    <!--  DeviceListActivity -->
+    <string name="scanning">scanning for devices...</string>
+    <string name="select_device">select a device to connect</string>
+    <string name="none_paired">No devices have been paired</string>
+    <string name="none_found">No devices found</string>
+    <string name="title_paired_devices">Paired Devices</string>
+    <string name="title_other_devices">Other Available Devices</string>
+    <string name="button_scan">Scan for devices</string>
+
+    <!-- Options Menu -->
+    <string name="secure_connect">Connect a device - Secure</string>
+    <string name="insecure_connect">Connect a device - Insecure</string>
+    <string name="discoverable">Make discoverable</string>
+
+    <string name="intro_message">
+        <![CDATA[
+            This application allows two Android devices to carry out two-way text chat over
+            Bluetooth. It demonstrates all the fundamental Bluetooth API capabilites, such as:
+              (1) Scanning for other Bluetooth devices
+              (2) Querying the local Bluetooth adapter for paired Bluetooth devices
+              (3) Establishing RFCOMM channels/sockets
+              (4) Connecting to a remote device
+              (5) Transfering data over Bluetooth
+        ]]>
+    </string>
+    <!-- Activity themes -->
+
+    <style name="Theme.Base" parent="android:Theme.Light" />
+
+    <style name="Theme.Sample" parent="Theme.Base" />
+
+    <!-- Widget styling -->
+
+    <style name="Widget" />
+
+    <style name="Widget.SampleMessage">
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+        <item name="android:lineSpacingMultiplier">1.1</item>
+    </style>
+
+    <style name="Widget.SampleMessageTile">
+        <item name="android:background">@drawable/ic_media_play</item>
+        <item name="android:shadowColor">#7F000000</item>
+        <item name="android:shadowDy">-3.5</item>
+        <item name="android:shadowRadius">2</item>
+    </style>
+
+    <string name="sample_show_log">Show Log</string>
+    <string name="sample_hide_log">Hide Log</string>
+    <string name="title_activity_bluetooth_main2">BluetoothMainActivity2</string>
+    <string name="settings">Settings</string>
+    <string name="join_group">Join group</string>
+    <string name="find_more_people">Find more people</string>
+
+    <!-- SING UP ACTIVITY -->
+    <string name="sign_up_username">E-mail:</string>
+    <string name="sign_up_password">Password:</string>
+    <string name="sign_up_password_confirm">Re-password:</string>
+    <string name="sign_up_first_name">First name:</string>
+    <string name="sign_up_last_name">Last name:</string>
+    <string name="sign_up_phone_number">Phone number:</string>
+    <string name="sign_up_photo">Profile photo:</string>
+    <string name="sign_up_profile_button">Take Photo</string>
+    <string name="menu_view_profile">View Profile</string>
+
+</resources>
+

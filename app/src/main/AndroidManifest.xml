@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.aleksandarx.foodfinder">
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
+    <uses-feature android:name="android.hardware.camera" />
+
+    <application
+        android:name="android.support.multidex.MultiDexApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher2"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <service android:name=".sync.BackgroundService" />
+        <service
+            android:name=".socket.SocketService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <activity
+            android:name=".view.MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".view.PlacePickerActivity" />
+        <activity
+            android:name=".view.LoginActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".view.FoodArticlesActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.aleksandarx.foodfinder.view.MainActivity" />
+        </activity>
+        <activity android:name=".view.CreateFoodActivity" />
+        <activity android:name=".view.CameraActivity" />
+        <activity android:name=".view.FoodViewActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.aleksandarx.foodfinder.view.FoodArticlesActivity" />
+        </activity>
+        <activity android:name=".bluetooth.DeviceListActivity" />
+        <activity android:name=".bluetooth.BluetoothMainActivity" />
+        <activity android:name=".view.SocketActivity" />
+        <activity android:name=".view.SettingsActivity" />
+        <activity android:name=".view.SignUpActivity" />
+        <activity android:name=".view.ProfileViewActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.aleksandarx.foodfinder.view.MainActivity" />
+        </activity>
+
+        <!-- <receiver android:name=".sync.AlarmReceiver" /> -->
+
+        <activity android:name=".view.BluetoothActivity" />
+        <activity android:name=".view.ViewFriendsActivity"/>
+        <activity android:name=".view.TopRestaurantsActivity"/>
+    </application>
+
+</manifest>
