@@ -10,9 +10,10 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.aleksandarx.foodfinder.R;
-import com.example.aleksandarx.foodfinder.share.UserPreferences;
+import com.example.aleksandarx.foodfinder.settings.Connections;
 import com.example.aleksandarx.foodfinder.socket.SocketService;
 
 import java.util.HashMap;
@@ -23,8 +24,9 @@ public class SettingsActivity extends AppCompatActivity {
     private HashMap<Boolean, String> serviceState;
     private Switch socketServiceSwitch;
 
-    private Button showInfo;
-    private TextView infoBox;
+    private Button submitButton;
+    private TextView rangeBox;
+    private TextView nameBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,15 +59,15 @@ public class SettingsActivity extends AppCompatActivity {
         socketServiceSwitch.setChecked(isChecked);
         socketServiceSwitch.setText(serviceState.get(isChecked));
 
-        infoBox = (TextView) findViewById(R.id.user_info);
-        showInfo = (Button) findViewById(R.id.show_user_info);
-        showInfo.setOnClickListener(new View.OnClickListener() {
+        rangeBox = (TextView) findViewById(R.id.range_edit_box);
+        nameBox = (TextView) findViewById(R.id.settings_place_name);
+        submitButton = (Button) findViewById(R.id.settings_submit_button);
+        submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String username = UserPreferences.getPreference(SettingsActivity.this,UserPreferences.USER_USERNAME);
-                String password = UserPreferences.getPreference(SettingsActivity.this,UserPreferences.USER_PASSWORD);
-                String id = UserPreferences.getPreference(SettingsActivity.this,UserPreferences.USER_ID);
-                infoBox.setText(username+" "+password+" "+id);
+                Connections.placeName = nameBox.getText().toString();
+                Connections.rangeInMetters = Integer.parseInt(rangeBox.getText().toString());
+                Toast.makeText(SettingsActivity.this,"Settings updated.",Toast.LENGTH_SHORT).show();
             }
         });
 
