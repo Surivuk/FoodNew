@@ -5,10 +5,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -37,7 +37,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
 public class CreateFoodActivity extends AppCompatActivity {
 
     private LinearLayout foodPanel;
@@ -161,6 +160,55 @@ public class CreateFoodActivity extends AppCompatActivity {
         }
     }
 
+    private String unicodeEscape(String input){
+        StringBuilder b = new StringBuilder();
+
+        for (char c : input.toCharArray()) {
+            if (c >= 128)
+                b.append("\\u").append(String.format("%04X", (int) c));
+            else
+                b.append(c);
+        }
+
+        return b.toString();
+    }
+    private String decodeUnicodeEscape(String input)
+    {
+        try{
+            char[] array = input.toCharArray();
+            String text = "";
+            for(int i = 0 ; i < array.length; i++)
+            {
+                if(array[i] == '\\')
+                {
+                    String uniBuff = "";
+                    uniBuff += array[i+2];
+                    uniBuff += array[i+3];
+                    uniBuff += array[i+4];
+                    uniBuff += array[i+5];
+
+                    int hexVal = Integer.parseInt(uniBuff,16);
+
+                    text += (char) hexVal;
+
+                    i = i + 5;
+
+                }
+                else{
+                    text += array[i];
+                }
+            }
+            return text;
+        }
+        catch(Exception ex)
+        {
+            return "Error";
+        }
+
+
+
+    }
+
     private HashMap<String, String> createFoodObject(){
         HashMap<String, String> obj = new HashMap<>();
         obj.put("user_id", UserPreferences.getPreference(CreateFoodActivity.this, UserPreferences.USER_ID));
@@ -180,11 +228,16 @@ public class CreateFoodActivity extends AppCompatActivity {
             obj.put("isFood", "off");
 
         try {
-            obj.put("locationName", restaurant.getString("name"));
-            obj.put("locationAddress", restaurant.getString("vicinity"));
+            obj.put("locationName", unicodeEscape(restaurant.getString("name")));
+            obj.put("locationAddress", unicodeEscape(restaurant.getString("vicinity")));
             obj.put("place_id", restaurant.getString("place_id"));
             obj.put("locationLat", restaurant.getString("lat"));
             obj.put("locationLng", restaurant.getString("lng"));
+
+
+            String deco1 = decodeUnicodeEscape(unicodeEscape(restaurant.getString("name")));
+            String deco2 = decodeUnicodeEscape(unicodeEscape(restaurant.getString("vicinity")));
+
         } catch (JSONException e) {
             e.printStackTrace();
         }

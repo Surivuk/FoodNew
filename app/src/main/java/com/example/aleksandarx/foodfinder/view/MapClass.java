@@ -3,13 +3,17 @@ package com.example.aleksandarx.foodfinder.view;
 import android.os.Handler;
 import android.widget.Toast;
 
+import com.example.aleksandarx.foodfinder.R;
+import com.example.aleksandarx.foodfinder.data.model.PlaceModel;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,10 +34,11 @@ public class MapClass implements OnMapReadyCallback {
 
     private HashMap<Integer,Marker> restaurants = null;
     private HashMap<Integer,Marker> friendsMarkers = null;
-
+    public ArrayList<PlaceModel> buffer;
     public MapClass(int mapId, MainActivity act){
         mapReady = false;
         activity = act;
+        buffer = new ArrayList<>();
         friendsMarkers = new HashMap<>();
         restaurants = new HashMap<>();
         SupportMapFragment mapFragment = (SupportMapFragment) act.getSupportFragmentManager()
@@ -50,57 +55,40 @@ public class MapClass implements OnMapReadyCallback {
         map = googleMap;
         guiThread = new Handler();
 
-        /*final LatLng sydney = new LatLng(43.322810, 21.895282);
-        map.addMarker(new MarkerOptions().position(sydney).title("Marker in Nis"));
-        map.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 18));*/
+
         map.getUiSettings().setCompassEnabled(true);
 
+        int bufferedContent = buffer.size();
+        for(int i = 0 ; i < bufferedContent; i++)
+        {
+            PlaceModel p = buffer.get(i);
+            Marker place = restaurants.get(p.id);
+            if(place != null) restaurants.remove(p.id);
 
+            place = map.addMarker(new MarkerOptions()
+                            .position(new LatLng(p.latitude,p.longitude))
+                            .title(p.id+")"+p.name+"\n"+p.address)
+                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_fast_food))
+            );
+            restaurants.put(p.id,place);
 
+        }
+        if(bufferedContent > 0)
+        {
+            buffer.clear();
+        }
+        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
 
+                String markerName = marker.getTitle();
+                String[] split = markerName.split("\\)");
+                Toast.makeText(activity,"Clicked: "+markerName,Toast.LENGTH_SHORT).show();
 
-        /*if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            LocationManager locationManager = (LocationManager) activity.getSystemService(activity.LOCATION_SERVICE);
-            LocationListener locationListener = new LocationListener() {
-                public void onLocationChanged(final Location location) {
-                    LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
-
-                    ExecutorService thread = Executors.newSingleThreadExecutor();
-                    thread.submit(new Runnable() {
-                        @Override
-                        public void run() {
-                            updateMapPlaces(HttpHelper.findPlacesAroundYou(location.getLatitude(),location.getLongitude()));
-                        }
-                    });
-
-                    Toast.makeText(activity, "UPDATE", Toast.LENGTH_SHORT).show();
-                    MarkerOptions m = new MarkerOptions().position(pos);
-                    map.addMarker(m);
-
-                }
-
-                public void onStatusChanged(String provider, int status, Bundle extras) {
-
-                }
-
-                public void onProviderEnabled(String provider) {
-                    Toast.makeText(activity, "START", Toast.LENGTH_SHORT).show();
-                }
-
-                public void onProviderDisabled(String provider) {
-                    Toast.makeText(activity, "STOP", Toast.LENGTH_SHORT).show();
-                }
-            };
-
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, GPS_TIME_INTERVAL, GPS_DISTANCE, locationListener);
-
-
-            if(personsMarker != null)
-            {
-                map.addMarker(personsMarker);
+                return false;
             }
-        }*/
+        });
+
 
     }
     private void updateMapPlaces(final List<MarkerOptions> markers)
@@ -116,30 +104,56 @@ public class MapClass implements OnMapReadyCallback {
             }
         });
     }
-    public void tryAddplace(Integer id,String name,double lat,double lng)
+
+    public void tryAddPlaces(ArrayList<PlaceModel> places)
+    {
+        if(map != null)
+        {
+            restaurants.clear();
+
+            for(int i = 0; i < places.size(); i++)
+            {
+                PlaceModel place = places.get(i);
+                Marker placeMarker = map.addMarker(new MarkerOptions()
+                        .position(new LatLng(place.latitude,place.longitude))
+                        .title(String.valueOf(place.id)+")"+place.name+"\n"+place.address)
+                        .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_fast_food))
+                );
+                restaurants.put(place.id,placeMarker);
+            }
+        }
+        else{
+            buffer.addAll(places);
+        }
+    }
+    public void tryAddplace(PlaceModel place)
     {
         if(map!= null)
         {
-            Marker place = restaurants.get(id);
-            if(place != null) restaurants.remove(id);
+            Marker placeMarker = restaurants.get(place.id);
+            if(place != null) restaurants.remove(place.id);
 
-            place = map.addMarker(new MarkerOptions()
-                            .position(new LatLng(lat,lng))
-                            .title(name)
-                    //.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_custom_pin))
+            placeMarker = map.addMarker(new MarkerOptions()
+                            .position(new LatLng(place.latitude,place.longitude))
+                            .title(String.valueOf(place.id)+")"+place.name+"\n"+place.address)
+                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_fast_food))
             );
-            restaurants.put(id,place);
+            restaurants.put(place.id,placeMarker);
+
+        }
+        else{
+            //map is not ready , buffer the content
+            buffer.add(place);
         }
 
 
     }
-    public boolean addPersonMarker(String title,double lat,double lng)
-    {
-            personsMarker = new MarkerOptions();
-            personsMarker.title(title);
-            personsMarker.position(new LatLng(lat,lng));
-            //personsMarker.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_custom_pin));
-            return mapReady;
+    public boolean addPersonMarker(String title,double lat,double lng) {
+        personsMarker = new MarkerOptions();
+        personsMarker.title(title);
+        personsMarker.position(new LatLng(lat, lng));
+        personsMarker.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_person));
+        return mapReady;
     }
     public void tryAddFriend(Integer id,String name,double lat,double lng)
     {
@@ -149,7 +163,8 @@ public class MapClass implements OnMapReadyCallback {
 
         friendMarker = map.addMarker(new MarkerOptions()
                                             .position(new LatLng(lat, lng))
-                                            .title(name));
+                                            .title(String.valueOf(id)+")"+name)
+                                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_person)));
         friendsMarkers.put(id,friendMarker);
     }
     public void changeMyPin(LatLng latLng){

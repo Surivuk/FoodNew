@@ -39,7 +39,9 @@
         <activity
             android:name=".view.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+           />
+
         <activity android:name=".view.PlacePickerActivity" />
         <activity
             android:name=".view.LoginActivity"

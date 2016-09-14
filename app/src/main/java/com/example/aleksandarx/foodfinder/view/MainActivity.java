@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.example.aleksandarx.foodfinder.R;
@@ -35,6 +33,7 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static boolean active = false;
     private MapClass myMap;
     private Context context;
     private HashMap<Integer,PersonModel> friends;
@@ -137,11 +136,14 @@ public class MainActivity extends AppCompatActivity {
                     Log.i("MainActivity","BCAST type 5! Received restaurants update but its empty!");
                     return;
                 }
-
+                if(places.size() == 0)
+                {
+                    //map clear all places
+                }
                 for(int i = 0; i < places.size(); i++)
                 {
                         PlaceModel place = places.get(i);
-                        myMap.tryAddplace(place.id,place.name+"\n"+place.address,place.latitude,place.longitude);
+                        myMap.tryAddplace(place);
                 }
 
 
@@ -162,14 +164,14 @@ public class MainActivity extends AppCompatActivity {
 
         myMap = new MapClass(R.id.map, MainActivity.this);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         if(fab != null)
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     startActivity(new Intent(MainActivity.this, BluetoothActivity.class));
                 }
-            });
+            });*/
 
         Intent invokingIntent = getIntent();
         Bundle personBundle = invokingIntent.getExtras();
@@ -183,12 +185,13 @@ public class MainActivity extends AppCompatActivity {
                 if(type == -1)
                 {
                     //restaurants
-                    /*ArrayList<PlaceModel> places = personBundle.getParcelableArrayList("restaurants");
-                    for(int i = 0; i < places.size(); i++)
+                    ArrayList<PlaceModel> places = personBundle.getParcelableArrayList("restaurants");
+                    /*for(int i = 0; i < places.size(); i++)
                     {
                         PlaceModel place = places.get(i);
-                        myMap.tryAddplace(place.id,place.name+"\n"+place.address,place.latitude,place.longitude);
+                        myMap.tryAddplace(place);
                     }*/
+                    myMap.tryAddPlaces(places);
 
                 }
             }
@@ -205,21 +208,23 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
+        active = true;
         LocalBroadcastManager.getInstance(this).registerReceiver(mLocationReceiver, new IntentFilter("location-change"));
         LocalBroadcastManager.getInstance(this).registerReceiver(mFriendReceiver, new IntentFilter("friend-req"));
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(SocketService.MY_ACTION);
         registerReceiver(SocketReceiver, intentFilter);
-        startService(btServicel);
+        //startService(btServicel);
         super.onStart();
     }
 
     @Override
     protected void onStop() {
+        active = false;
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mLocationReceiver);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mFriendReceiver);
         unregisterReceiver(SocketReceiver);
-        stopService(btServicel);
+        //stopService(btServicel);
         super.onStop();
     }
 
@@ -255,6 +260,7 @@ public class MainActivity extends AppCompatActivity {
                 UserPreferences.removePreference(MainActivity.this, UserPreferences.USER_ID);
                 stopService(new Intent(MainActivity.this,SocketService.class));
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                finish();
                 return true;
             case R.id.menu_bluetooth:
                 Intent intent = new Intent(MainActivity.this,BluetoothMainActivity.class);
