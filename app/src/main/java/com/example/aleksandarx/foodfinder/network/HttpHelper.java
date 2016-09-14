@@ -244,6 +244,10 @@ public class HttpHelper {
         }
     }
 
+
+
+
+
     public static String newFood(byte[] picture, HashMap<String, String> data)
     {
         String attachmentName = "imageFile";
@@ -266,7 +270,7 @@ public class HttpHelper {
 
             DataOutputStream request = new DataOutputStream(httpUrlConnection.getOutputStream());
 
-            FoodModel model = new FoodModel();
+            //FoodModel model = new FoodModel();
 
             if(picture != null) {
                 //************************************

@@ -162,7 +162,11 @@ public class SocketService extends Service {
                 if(places.size() > 0)
                 {
                     sendBroadcast(intent);
-                    notificationSetup(places);
+                    if(MainActivity.active == false)
+                    {
+                        notificationSetup(places);
+                    }
+
                 }
 
             }
@@ -187,7 +191,7 @@ public class SocketService extends Service {
         Notification n  = new Notification.Builder(this)
                 .setContentTitle("Restaurants near by!")
                 .setContentText("Click to see more")
-                .setSmallIcon(R.drawable.ic_ff_notification)
+                .setSmallIcon(R.drawable.ic_stat_name)
                 .setContentIntent(pIntent)
                 .setAutoCancel(true)
                 .build();
