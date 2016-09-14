@@ -191,7 +191,7 @@ public class SocketService extends Service {
         Notification n  = new Notification.Builder(this)
                 .setContentTitle("Restaurants near by!")
                 .setContentText("Click to see more")
-                .setSmallIcon(R.drawable.ic_stat_name)
+                .setSmallIcon(R.mipmap.ic_fast_food)
                 .setContentIntent(pIntent)
                 .setAutoCancel(true)
                 .build();

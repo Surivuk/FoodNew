@@ -82,7 +82,7 @@ public class MapClass implements OnMapReadyCallback {
             public boolean onMarkerClick(Marker marker) {
 
                 String markerName = marker.getTitle();
-
+                String[] split = markerName.split("\\)");
                 Toast.makeText(activity,"Clicked: "+markerName,Toast.LENGTH_SHORT).show();
 
                 return false;

@@ -2,9 +2,9 @@ package com.example.aleksandarx.foodfinder.view;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -30,8 +30,6 @@ import org.json.JSONObject;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class FoodArticlesActivity extends AppCompatActivity {
 
@@ -59,6 +57,7 @@ public class FoodArticlesActivity extends AppCompatActivity {
             isFriend = true;
             id = getIntent().getExtras().getInt("friend");
         }
+
         else {
             id = Integer.parseInt(UserPreferences.getPreference(FoodArticlesActivity.this, UserPreferences.USER_ID));
             getOverflowMenu();
